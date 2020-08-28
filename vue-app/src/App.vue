@@ -3,7 +3,12 @@
     <h1>Tasks</h1>
 
     <tasks-form @Adicionar_nova_tarefa="addTask" />
-    <tasks-table v-bind:tasks="tasks" @Empty_List="deleteList" @Clear_Tasks="clearTasks" />
+    <tasks-table
+      v-bind:tasks="tasks"
+      @Empty_List="deleteList"
+      @Clear_Tasks="clearTasks"
+      @Save="persist"
+    />
   </div>
 </template>
 
@@ -19,36 +24,23 @@ export default {
   },
   data() {
     return {
-      tasks: [
-        {
-          id: 1,
-          name: "Acabar este projeto",
-          due: "Hoje",
-        },
-        {
-          id: 2,
-          name: "Lavar Loica",
-          due: "3 Horas",
-        },
-        {
-          id: 3,
-          name: "Bugs",
-          due: "Agora",
-        },
-        {
-          id: 4,
-          name: "Teste1",
-          due: "Agora",
-        },
-        {
-          id: 5,
-          name: "Teste77",
-          due: "Agora",
-        },
-      ],
+      tasks: [],
     };
   },
+  mounted() {
+    if (localStorage.getItem("tasks")) {
+      try {
+        this.tasks = JSON.parse(localStorage.getItem("tasks"));
+      } catch (e) {
+        localStorage.removeItem("tasks");
+      }
+    }
+  },
   methods: {
+    persist() {
+      const parsed = JSON.stringify(this.tasks);
+      localStorage.setItem("tasks", parsed);
+    },
     addTask(task) {
       const id =
         this.tasks.length > 0 ? this.tasks[this.tasks.length - 1].id + 1 : 0;

@@ -25,7 +25,8 @@
     <div class="function-buttons">
       <button style="margin: 5px;" @click="clearPush">Clear Completed</button>
       <button style="margin: 5px;" class="empty-button" @click="emptyList">Empty List</button>
-      <button style="margin: 5px;" class="save-button">Save</button>
+      <button style="margin: 5px;" class="save-button" @click="saveList">Save</button>
+      <p v-if="success" class="success-message">✅ Save successfully</p>
     </div>
   </div>
 </template>
@@ -39,11 +40,23 @@ export default {
   data() {
     return {
       clearlist: [],
+      success: false,
     };
+  },
+  watch: {
+    clean() {
+      if (this.success == true) {
+        setTimeout(this.success, 5000);
+      }
+    },
   },
   methods: {
     emptyList() {
       this.$emit("Empty_List");
+    },
+    saveList() {
+      this.$emit("Save");
+      this.success = true;
     },
     clearPush() {
       for (var i = 0; i < this.clearlist.length; i++) {
@@ -88,5 +101,12 @@ export default {
 .empty-button:hover {
   background-color: rgb(173, 0, 0);
   margin: 5px;
+}
+.error-message {
+  color: #d33c40;
+}
+
+.success-message {
+  color: #32a95d;
 }
 </style>
